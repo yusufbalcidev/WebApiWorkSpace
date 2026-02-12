@@ -5,11 +5,12 @@ using App.Services.Categories.Create;
 using App.Services.Categories.Dto;
 using App.Services.Categories.Update;
 using AutoMapper;
+using Azure.Core;
 using Microsoft.EntityFrameworkCore;
 
 namespace App.Services.Categories
 {
-    public class CategoryService(ICategoryRepository categoryRepository, UnitOfWork unitOfWork, IMapper mapper) : ICategoryService
+    public class CategoryService(ICategoryRepository categoryRepository, IUnitOfWork unitOfWork, IMapper mapper) : ICategoryService
     {
         public async Task<ServiceResult<CategoryWithProductsDto>> GetAllWithProductsAsync(int categoryId)
         {
@@ -53,10 +54,10 @@ namespace App.Services.Categories
                 return ServiceResult<int>.Fail("Category already exists",
                     HttpStatusCode.NotFound);
             }
-            var newCategory = new Category { Name = request.Name };
+            var newCategory = mapper.Map<Category>(request);
             await categoryRepository.AddAsync(newCategory);
             await unitOfWork.SaveChangesAsync();
-            return ServiceResult<int>.Success(newCategory.Id);
+            return ServiceResult<int>.SuccessAsCreated(newCategory.Id, $"api/categories/{newCategory.Id}");
         }
 
         public async Task<ServiceResult> UpdateAsync(int id, UpdateCategoryRequest request)

@@ -22,6 +22,10 @@ namespace App.Services.Products.Create
                 .GreaterThan(0).WithMessage("ürün fiyatı 0'dan büyük olmalıdır.");
 
 
+            RuleFor(x => x.CategoryId)
+                .GreaterThan(0).WithMessage("ürün kategori degeri 0'dan büyük olmalıdır.");
+
+
             //stock inclusiveBetween validation
             RuleFor(x => x.Stock)
                 .InclusiveBetween(1, 100).WithMessage("stok adedi 1 ile 100 arasında olmalıdır");
