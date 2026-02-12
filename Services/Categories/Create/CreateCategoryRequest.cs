@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace App.Services.Categories.Create
 {
-    public record CreateCategoryRequest
-    {
-    }
+    public record CreateCategoryRequest(string Name);
+   
 }
